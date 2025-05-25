@@ -1,0 +1,26 @@
+services:
+  api:
+    build:
+      context: ./ProjetoAuvo
+    ports:
+      - "5091:5091"
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=us-east-1
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+    depends_on:
+      - localstack
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=dynamodb
+      - DEBUG=1
+    volumes:
+      - ./infra:/etc/localstack/init/ready.d
+

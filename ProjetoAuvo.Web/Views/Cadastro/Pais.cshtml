@@ -1,0 +1,105 @@
+﻿@using ProjetoAuvo.Models
+@model IEnumerable<PaisFavorito>
+
+<div class="main-wrapper">
+    <header>
+        @Html.Partial("~/Views/Header.cshtml")
+    </header>
+    <div class="header-bar w-100 mt-4 d-flex justify-content-between align-items-center px-3 py-2" id="blocoTitulo">
+        <h5 class="mb-0 text-white">Favoritos (País)</h5>
+        <a asp-action="FormularioPais" asp-controller="Cadastro" class="btn btn-light btn-sm">Novo</a>
+    </div>
+
+    <div class="content container">
+        <div class="table-container">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Código</th>
+                        <th scope="col">Nome</th>
+                        <th></th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td data-label="Código">
+                                @item.Codigo
+                            </td>
+                            <td data-label="Nome">
+                                @item.Nome
+                            </td>
+                            <td data-label="Excluir">
+                                <button class="btn btn-danger" onclick="removerPais(@item.Id)">
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="botaoVoltar">
+        <a asp-action="Index" asp-controller="Home" role="button" class="btn btn-dark" style="margin-left:5px;">Voltar</a>
+    </div>
+    <footer class="footer">
+        @Html.Partial("~/Views/Footer.cshtml")
+    </footer>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Atenção!!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" hidden id="idExclusao" />
+                Tem certeza da remoção desse registro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="ExcluirPais()">Sim</button>
+                <button type="button" onclick="fecharModal()" class="btn btn-primary">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script Script>
+
+    function fecharModal() {
+        $('.modal').modal('hide');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    function removerPais(id) {
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        myModal.show();
+        $("#idExclusao").val(id);
+    }
+
+    function ExcluirPais() {
+        var excluir = $("#idExclusao").val();
+        $.ajax({
+            url: '/Cadastro/RemoverPais?Id=' + excluir,
+            type: 'POST',
+            success: function (resposta) {
+                if (resposta.sucesso) {
+                    location.reload();
+                    $('.modal').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("Erro: " + error);
+            }
+        });
+    }
+</script>
+

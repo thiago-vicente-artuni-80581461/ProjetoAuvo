@@ -1,0 +1,6 @@
+@ProjetoAuvo_HostAddress = http://localhost:5091
+
+GET {{ProjetoAuvo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

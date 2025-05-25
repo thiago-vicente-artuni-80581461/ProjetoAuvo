@@ -1,0 +1,84 @@
+﻿@model ProjetoAuvo.Models.CidadeFavorita
+<div class="main-wrapper">
+    <header>
+        @Html.Partial("~/Views/Header.cshtml")
+    </header>
+    <div class="header-bar w-100 mt-4 d-flex justify-content-between align-items-center px-3 py-2" id="blocoTitulo">
+        <h5 class="mb-0 text-white">Cadastro de Países e Clima</h5>
+    </div>
+    <div class="contentLogin container">
+        <form asp-action="SalvarFavoritoCidade" asp-controller="Cadastro" method="post">
+            <div class="mb-3 row">
+                <label for="nome" class="col-sm-2 col-form-label text-black">Cidade:</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="Cidade" class="form-control" id="cidade" name="cidade">
+                    <br/>
+                    <button type="button" onclick="buscarCidade()" class="btn btn-secondary">Buscar Cidade</button>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="nome" class="col-sm-2 col-form-label text-black">Condicao:</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="Condicao" class="form-control" id="condicao" readonly name="condicao">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="nome" class="col-sm-2 col-form-label text-black">Descricao:</label>
+                <div class="col-sm-10">
+                    <input type="text" asp-for="Descricao" class="form-control" id="descricao" readonly name="descricao">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="nome" class="col-sm-2 col-form-label text-black">Temperatura:</label>
+                <div class="col-sm-10">
+                    <input type="number" asp-for="Temperatura" class="form-control" id="temperatura" readonly name="temperatura" step="0.01">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="nome" class="col-sm-2 col-form-label text-black">SensacaoTermica:</label>
+                <div class="col-sm-10">
+                    <input type="number" asp-for="SensacaoTermica" class="form-control" id="sensacaoTermica" readonly name="sensacaoTermica" step="0.01">
+                </div>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-end mb-4">
+                <input type="submit" class="btn btn-dark me-2" value="Salvar" />
+                <button type="button" onclick="limparCampos()" class="btn btn-secondary">Limpar</button>
+            </div>
+        </form>
+    </div>
+    <div id="botaoVoltar">
+        <a asp-action="Pais" asp-controller="Cadastro" role="button" class="btn btn-outline-dark">Voltar</a>
+    </div>
+    <footer class="footer">
+        @Html.Partial("~/Views/Footer.cshtml")
+    </footer>
+</div>
+<script>
+
+    function buscarCidade(){
+        var cidadeR = document.getElementById("cidade");
+        var condicao = document.getElementById("condicao");
+        var descricaoR = document.getElementById("descricao");
+        var temperaturaR = document.getElementById("temperatura");
+        var sensacaoTermicaR = document.getElementById("sensacaoTermica");
+         $.ajax({
+            url: '/Cadastro/BuscarCidade?Cidade=' + cidade.value,
+            type: 'POST',
+            success: function (response) {
+                const cidadeR = response.resposta;
+
+                condicao.value = cidadeR.condicao;
+                cidadeR.value = cidadeR.cidade;
+                descricaoR.value = cidadeR.descricao;
+                temperaturaR.value = cidadeR.temperatura;
+                sensacaoTermicaR.value = cidadeR.sensacaoTermica;
+
+
+            },
+            error: function (xhr, status, error) {
+                console.log("Erro: " + error);
+            }
+        });
+    }
+</script>
