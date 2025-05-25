@@ -12,8 +12,35 @@ using Microsoft.EntityFrameworkCore;
 using ProjetoAuvo.Data.Config;
 using AutoMapper;
 using System.Reflection;
+using Amazon.CloudWatchLogs;
+using Amazon;
+using Amazon.CloudWatchLogs.Model;
+using Amazon.CloudWatch.Model;
+using Amazon.CloudWatch;
+using Amazon.Runtime;
+using System.Net.Sockets;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+builder.Logging.AddAWSProvider(builder.Configuration.GetAWSLoggingConfigSection());
+
+var awsOptions = builder.Configuration.GetAWSOptions();
+awsOptions.Credentials = new BasicAWSCredentials("test", "test");
+awsOptions.DefaultClientConfig.ServiceURL = "http://localhost:4566";
+
+builder.Services.AddDefaultAWSOptions(awsOptions);
+
+var cwCredentials = new BasicAWSCredentials("test", "test");
+
+var cwClient = new AmazonCloudWatchClient(cwCredentials, new AmazonCloudWatchConfig
+{
+    ServiceURL = "http://localhost:4566",
+    RegionEndpoint = RegionEndpoint.USEast1
+});
 
 builder.Services.AddControllers();
 
@@ -99,6 +126,35 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Projeto Auvo v1");
+});
+
+
+app.MapGet("/metric", async () =>
+{
+    var metricDatum = new MetricDatum
+    {
+        MetricName = "PaginaInicialAcessada",
+        Unit = Amazon.CloudWatch.StandardUnit.Count,
+        Value = 1,
+        Dimensions = new List<Dimension>
+        {
+            new Dimension
+            {
+                Name = "Aplicacao",
+                Value = "ProjetoAuvo"
+            }
+        }
+    };
+
+    var request = new PutMetricDataRequest
+    {
+        Namespace = "ProjetoAuvo/MetricaCustomizada",
+        MetricData = new List<MetricDatum> { metricDatum }
+    };
+
+    await cwClient.PutMetricDataAsync(request);
+
+    return Results.Ok("Métrica enviada com sucesso!");
 });
 
 app.UseAuthentication();

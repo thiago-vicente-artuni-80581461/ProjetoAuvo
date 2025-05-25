@@ -8,6 +8,11 @@
       "sslPort": 44395
     }
   },
+  "environmentVariables": {
+    "AWS_ACCESS_KEY_ID": "test",
+    "AWS_SECRET_ACCESS_KEY": "test",
+    "AWS_REGION": "us-east-1"
+  },
   "profiles": {
     "http": {
       "commandName": "Project",

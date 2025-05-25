@@ -7,7 +7,6 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
-      - AWS_REGION=us-east-1
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5000
     depends_on:
@@ -19,8 +18,14 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=dynamodb
+      - SERVICES=cloudwatch,logs,dynamodb,s3,iam,sts
       - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+
     volumes:
       - ./infra:/etc/localstack/init/ready.d
+      - /var/run/docker.sock:/var/run/docker.sock
 

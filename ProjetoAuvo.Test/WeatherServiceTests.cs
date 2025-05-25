@@ -26,7 +26,7 @@ namespace ProjetoAuvo.Test
         }
 
         [Test]
-        public async Task ObterClimaAsync_CidadeValida_DeveRetornarClima()
+        public async Task CidadeValidaRetornarClima()
         {
             var resultado = await _mockService.Object.ObterClimaAsync("Rio");
 
