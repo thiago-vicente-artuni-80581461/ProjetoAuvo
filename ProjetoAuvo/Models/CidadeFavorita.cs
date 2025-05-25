@@ -6,7 +6,7 @@
         public string Cidade { get; set; }
         public string Condicao { get; set; }
         public string Descricao { get; set; }
-        public decimal Temperatura { get; set; }
-        public decimal SensacaoTermica { get; set; }
+        public decimal? Temperatura { get; set; }
+        public decimal? SensacaoTermica { get; set; }
     }
 }

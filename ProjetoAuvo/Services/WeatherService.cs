@@ -46,6 +46,21 @@ public class WeatherService : IWeatherService
 
     public void SalvarCidade(CidadeFavorita cidade)
     {
+        if (string.IsNullOrWhiteSpace(cidade.Cidade))
+            throw new ArgumentException("Cidade Vazia");
+
+        if (string.IsNullOrWhiteSpace(cidade.Condicao))
+            throw new ArgumentException("Condição Vazia");
+
+        if (string.IsNullOrWhiteSpace(cidade.Descricao))
+            throw new ArgumentException("Descrição Vazia");
+
+        if (cidade.Temperatura == null)
+            throw new ArgumentException("Temperatura Vazia");
+
+        if (cidade.SensacaoTermica == null)
+            throw new ArgumentException("Sensção Termíca Vazia");
+
         _iPaisRepository.SalvarCidade(cidade);
     }
 

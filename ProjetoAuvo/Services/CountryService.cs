@@ -96,5 +96,16 @@ namespace ProjetoAuvo.Services
                 throw;
             }
         }
+
+        public void SalvarFavorito(PaisFavorito pais)
+        {
+            if (string.IsNullOrWhiteSpace(pais.Nome))
+                throw new ArgumentException("Nome Vazio");
+
+            if (string.IsNullOrWhiteSpace(pais.Codigo))
+                throw new ArgumentException("Código Vazio");
+
+            _paisRepository.SalvarPais(pais);
+        }
     }
 }
