@@ -30,19 +30,19 @@ namespace ProjetoAuvo.Services
 
             var lista = new List<Pais>();
 
-            foreach (var country in data.EnumerateArray())
+            foreach (var pais in data.EnumerateArray())
             {
                 try
                 {
-                    var codigo = country.GetProperty("cca2").GetString();
-                    var nome = country.GetProperty("name").GetProperty("common").GetString();
-                    var capital = country.TryGetProperty("capital", out var capitalProp) && capitalProp.GetArrayLength() > 0
+                    var codigo = pais.GetProperty("cca2").GetString();
+                    var nome = pais.GetProperty("name").GetProperty("common").GetString();
+                    var capital = pais.TryGetProperty("capital", out var capitalProp) && capitalProp.GetArrayLength() > 0
                         ? capitalProp[0].GetString()
                         : null;
-                    var regiao = country.GetProperty("region").GetString();
+                    var regiao = pais.GetProperty("region").GetString();
 
                     var moedas = new List<string>();
-                    if (country.TryGetProperty("currencies", out var currenciesProp))
+                    if (pais.TryGetProperty("currencies", out var currenciesProp))
                     {
                         foreach (var moeda in currenciesProp.EnumerateObject())
                         {
@@ -53,20 +53,17 @@ namespace ProjetoAuvo.Services
 
                     lista.Add(new Pais
                     {
-                        Codigo = codigo!,
-                        Nome = nome!,
+                        Codigo = codigo,
+                        Nome = nome,
                         Capital = capital,
                         Regiao = regiao,
                         Moedas = moedas
                     });
-
-
                 }
-                catch
+                catch (Exception)
                 {
                     throw;
                 }
-
             }
             return lista;
         }

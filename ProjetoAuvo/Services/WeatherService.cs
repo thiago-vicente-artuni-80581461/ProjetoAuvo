@@ -9,15 +9,13 @@ using ProjetoAuvo.Services.Interface;
 public class WeatherService : IWeatherService
 {
     private readonly HttpClient _httpClient;
-    private readonly IAmazonDynamoDB _dynamoDb;
     private const string ApiKey = "8420e4619dd1e9577b2b3c53bf6d6da3";
     private const string BaseUrl = "https://api.openweathermap.org/data/2.5/weather";
     private readonly IPaisRepository _iPaisRepository;
 
-    public WeatherService(HttpClient httpClient, IAmazonDynamoDB dynamoDb, IPaisRepository paisRepository )
+    public WeatherService(HttpClient httpClient, IPaisRepository paisRepository )
     {
         _httpClient = httpClient;
-        _dynamoDb = dynamoDb;
         _iPaisRepository = paisRepository;
     }
     public async Task<Clima?> ObterClimaAsync(string cidade)

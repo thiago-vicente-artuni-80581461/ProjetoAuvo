@@ -21,7 +21,7 @@ namespace ProjetoAuvo.Test
             {
                 _paisRepository = new Mock<IPaisRepository>();
                 var mockHttp = new Mock<HttpClient>();
-                _weatherService = new WeatherService(mockHttp.Object, null, _paisRepository.Object);
+                _weatherService = new WeatherService(mockHttp.Object, _paisRepository.Object);
 
             }
 
